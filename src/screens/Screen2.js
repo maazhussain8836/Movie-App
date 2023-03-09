@@ -1,4 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import {
   View,
   Text,
@@ -11,157 +17,32 @@ import {
   useWindowDimensions,
   ScrollView,
   StatusBar,
+  Button,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {TabView, SceneMap} from 'react-native-tab-view';
-import axios from 'axios';
+import axiosConfig from '../provider/axios';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
-// const DATA = [
-//   {
-//     id: 1,
-//     name: 'Black Adam',
-//     imdb: '9.1',
-//     genre: 'Action',
-//     image: require('../assets/images/1a.jpg'),
-//   },
-//   {
-//     id: 2,
-//     name: 'Black Adam',
-//     imdb: '9.2',
-//     genre: 'Action',
-//     image: require('../assets/images/2.jpg'),
-//   },
-//   {
-//     id: 3,
-//     name: 'Black Adam',
-//     imdb: '9.3',
-//     genre: 'Action',
-//     image: require('../assets/images/3.jpg'),
-//   },
-//   {
-//     id: 4,
-//     name: 'Black Adam',
-//     imdb: '9.4',
-//     genre: 'Action',
-//     image: require('../assets/images/4.jpg'),
-//   },
-
-//   {
-//     id: 5,
-//     name: 'Black Adam',
-//     imdb: '9.5',
-//     genre: 'Action',
-//     image: require('../assets/images/5.jpg'),
-//   },
-// ];
-// const DATA2 = [
-//   {
-//     id: 6,
-//     name: 'Black Adam',
-//     imdb: '9.9',
-//     genre: 'Action',
-//     image: require('../assets/images/6.jpg'),
-//   },
-//   {
-//     id: 7,
-//     name: 'Black Adam',
-//     imdb: '9.10',
-//     genre: 'Action',
-//     image: require('../assets/images/7.jpg'),
-//   },
-//   {
-//     id: 8,
-//     name: 'Black Adam',
-//     imdb: '9.11',
-//     genre: 'Action',
-//     image: require('../assets/images/8.jpg'),
-//   },
-//   {
-//     id: 9,
-//     name: 'Black Adam',
-//     imdb: '9.12',
-//     genre: 'Action',
-//     image: require('../assets/images/9.jpg'),
-//   },
-//   {
-//     id: 10,
-//     name: 'Black Adam',
-//     imdb: '9.9',
-//     genre: 'Action',
-//     image: require('../assets/images/10.jpg'),
-//   },
-// ];
-// const DATA3 = [
-//   {
-//     id: 11,
-//     name: 'Black Adam',
-//     imdb: '9.6',
-//     genre: 'Action',
-//     image: require('../assets/images/11.jpg'),
-//   },
-//   {
-//     id: 12,
-//     name: 'Black Adam',
-//     imdb: '9.7',
-//     genre: 'Action',
-//     image: require('../assets/images/12.jpg'),
-//   },
-//   {
-//     id: 13,
-//     name: 'Black Adam',
-//     imdb: '9.8',
-//     genre: 'Action',
-//     image: require('../assets/images/13.jpg'),
-//   },
-//   {
-//     id: 14,
-//     name: 'Black Adam',
-//     imdb: '9.9',
-//     genre: 'Action',
-//     image: require('../assets/images/14.jpg'),
-//   },
-//   {
-//     id: 15,
-//     name: 'Black Adam',
-//     imdb: '9.10',
-//     genre: 'Action',
-//     image: require('../assets/images/15.jpg'),
-//   },
-// ];
 
 const Screen2 = ({navigation, route}) => {
-  const [selectData, setSelectData] = useState();
+  const [videoData, setVideoData] = useState();
   const routeData = route.params;
 
-  useEffect(() => {
-    axios
-    .get('https://imdb-top-100-movies.p.rapidapi.com/', {
-      headers: {
-        'X-RapidAPI-Key':
-          '13f129cac9msh7fc11041ecd8a1dp18a5d5jsn903021b1e346',
-        'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com',
-      },
-    })
-    .then(res => {
-      let data = res?.data;
-      console.log(data)
-      data?.map(items => {
-      items?.id == routeData?.id ? setSelectData(items) : null;
-    });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }, [])
-  
-   
-  
+  console.log(routeData);
+
   //  Api data routing---------
   const FirstRoute = () => {
     return (
-      <ScrollView style={{marginTop: 20}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          flex: 1,
+          //  borderWidth: 2, borderColor: '#000'
+        }}>
         <Text
           style={{
             ...styles.text,
@@ -169,14 +50,14 @@ const Screen2 = ({navigation, route}) => {
             fontSize: 14,
             textAlign: 'left',
           }}>
-          {selectData?.description}
+          {routeData?.overview}
         </Text>
       </ScrollView>
     );
   };
 
   const SecondRoute = () => (
-    <ScrollView style={{marginTop: 20}}>
+    <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
       <Text
         style={{
           ...styles.text,
@@ -184,17 +65,13 @@ const Screen2 = ({navigation, route}) => {
           fontSize: 14,
           textAlign: 'left',
         }}>
-        Lorem ipsum dolor sit amet. Id magni rerum eum culpa galisum qui
-        accusantium expedita non officia ipsam rem iusto fugiat. Aut quod labore
-        aut reiciendis consequatur aut omnis maxime. Qui blanditiis sint et
-        reprehenderit consequuntur sed galisum asperiores et voluptas voluptate.
-        reprehenderit consequuntur sed galisum asperiores et voluptas voluptate.
+        {routeData?.overview}
       </Text>
     </ScrollView>
   );
 
   const ThirdRoute = () => (
-    <ScrollView style={{marginTop: 20}}>
+    <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
       <Text
         style={{
           ...styles.text,
@@ -202,11 +79,7 @@ const Screen2 = ({navigation, route}) => {
           fontSize: 14,
           textAlign: 'left',
         }}>
-        Lorem ipsum dolor sit amet. Id magni rerum eum culpa galisum qui
-        accusantium expedita non officia ipsam rem iusto fugiat. Aut quod labore
-        aut reiciendis consequatur aut omnis maxime. Qui blanditiis sint et
-        reprehenderit consequuntur sed galisum asperiores et voluptas voluptate.
-        reprehenderit consequuntur sed galisum asperiores et voluptas voluptate.
+        {routeData?.overview}
       </Text>
     </ScrollView>
   );
@@ -217,21 +90,7 @@ const Screen2 = ({navigation, route}) => {
     third: ThirdRoute,
   });
 
-  // Fake Data Routing-----
-  //  useEffect(() => {
-  //   DATA?.map(items => {
-  //     items?.id == routeData?.id ? setSelectData(items) : null;
-  //   });
-  //   DATA2?.map(items => {
-  //     items?.id == routeData?.id ? setSelectData(items) : null;
-  //   });
-  //   DATA3?.map(items => {
-  //     items?.id == routeData?.id ? setSelectData(items) : null;
-  //   });
-  // }, []);
-
-  
-  console.log(selectData, 'selectData');
+  console.log(routeData, 'routeData');
 
   const layout = useWindowDimensions();
 
@@ -249,176 +108,360 @@ const Screen2 = ({navigation, route}) => {
   //  Tab bar styling.................
   const renderTabBar = props => {
     return (
-      <View style={styles.tabBar}>
+      <View
+        style={{
+          ...styles.tabBar,
+          // borderColor: '#FFF', borderWidth: 2
+        }}>
         {props.navigationState.routes.map((route, i) => {
           return (
-            <LinearGradient
-              colors={['#454548bd', '#454548bd', '#454548bd']}
+            <TouchableOpacity
               style={{
-                width: '32.5%',
-                padding: 10,
+                flex: 1,
+                height: 70,
                 borderRadius: 15,
-                height: 60,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: 3,
+                // borderWidth:1,borderColor:'#000',
+                marginRight: 5,
+              }}
+              onPress={() => {
+                setIndex(i);
+                console.log(i, 'index');
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIndex(i);
-                  console.log(i, 'index');
+              <LinearGradient
+                colors={['#454548bd', '#454548bd', '#454548bd']}
+                style={{
+                  height: 70,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 15,
+                  padding: 20,
+                  width: 'auto',
+                  // borderWidth:1,borderColor:'#FFF'
                 }}>
                 <Animated.Text
                   style={{...styles.text, fontWeight: '400', fontSize: 14}}>
                   {route.title}
                 </Animated.Text>
-              </TouchableOpacity>
-            </LinearGradient>
+              </LinearGradient>
+            </TouchableOpacity>
           );
         })}
       </View>
     );
   };
-  return (
-    <ImageBackground
-      source={{uri: selectData?.image}}
-      resizeMode={'stretch'}
-      style={{width: '100%', height: '100%'}}>
-      <View style={styles.topNav}>
-        <Ionicons
-          size={25}
-          name={'chevron-back'}
-          color={'#FFF'}
-          onPress={() => navigation.navigate('Screen1')}
+
+  // RB sheet
+  const refRBSheet = useRef();
+
+  const openRBsheet = () => {
+    refRBSheet.current.open();
+    console.log('open RBSheet');
+  };
+  const closeRBsheet = () => {
+    refRBSheet.current.close();
+    console.log('close RBSheet');
+  };
+
+  const RBSheetData = () => {
+    return (
+      <View activeOpacity={1} style={{flex: 1}}>
+        <TabView
+          style={
+            {
+              // flex: 1,
+              // position: 'absolute',
+              // height:200,
+              // overflow: 'hidden',
+            }
+          }
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={handleIndexChange}
+          renderTabBar={renderTabBar}
         />
-
-        <Ionicons size={30} name={'heart-outline'} color={'#FFF'} />
-      </View>
-      <LinearGradient
-        colors={['#FFFFFF00', '#0e0e0dde', '#0e0e0df5']}
-        style={styles.VText}>
-        <View style={{marginHorizontal: 20}}>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            // borderWidth: 1,
+            // borderColor: '#FFF',
+            height: 'auto',
+            height: 70,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 15,
+            marginTop: 20,
+            marginBottom: 10,
+          }}
+          onPress={() => {
+            closeRBsheet();
+            navigation.navigate('Screen3',videoData);
+          }}>
           <LinearGradient
-            colors={['#454548bd', '#454548bd', '#454548bd']}
+            colors={['#FFD645', '#FFD645', '#FFD645']}
             style={{
-              width: '30%',
-              padding: 10,
+              height: 70,
+              alignItems: 'center',
+              justifyContent: 'center',
               borderRadius: 15,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              
+              padding: 20,
+              width: '100%',
             }}>
-            <View
+            <Text
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row',
-                
+                ...styles.text,
+                fontWeight: '500',
+                fontSize: 18,
+                color: '#000',
               }}>
-              <Ionicons
-                size={14}
-                name={'notifications-outline'}
-                color={'#FFF'}
-              />
-              <Text
-                style={{
-                  ...styles.text,
-                  fontWeight: '400',
-                  fontSize: 14,
-                  marginLeft: 15,
-                }}>
-                {selectData?.genre[0]}
-              </Text>
-            </View>
-          </LinearGradient>
-
-          <View style={{marginVertical: 10}}>
-            <Text style={{...styles.text, fontSize: 32, textAlign: 'left'}}>
-              {selectData?.title}
+              Book Your Ticket Now
             </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  //  -------Play Movie  Trailer ----------
+  useEffect(() => {
+    axiosConfig
+      .get(`/movie/${routeData?.id}/videos`, {
+        params: {
+          api_key: 'fb833fc3d7c0adf1c587ae2b5736fc6b',
+          language: 'en-US',
+        },
+      })
+      .then(res => {
+        let data = res?.data?.results;
+        console.log(data, 'video Api response');
+        const result = data.filter(item => item?.type === 'Trailer');
+        console.log(result,'trailer')
+        // console.log(result[0], 'trailer');
+        setVideoData(result[0]?.key);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [])
+  
+
+// console.log(videoData,'trailer')
+  return (
+    <View>
+      {routeData?.poster_path === null ? (
+        <Image
+          source={require('../assets/images/404.jpg')}
+          resizeMode="cover"
+          style={styles.ImageV}></Image>
+      ) : (
+        <ImageBackground
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${routeData?.poster_path}`,
+          }}
+          resizeMode={'cover'}
+          style={{width: '100%', height: '100%'}}>
+        
+
+          <View style={styles.topNav}>
+            <Ionicons
+              size={25}
+              name={'chevron-back'}
+              color={'#FFF'}
+              onPress={() => navigation.navigate('Screen1')}
+            />
+
+            <Ionicons size={30} name={'heart-outline'} color={'#FFF'} />
           </View>
-          <View
+
+          {/* <Trailer/> */}
+
+          <LinearGradient
+            colors={['#FFFFFF00', '#0e0e0dde', '#0e0e0df5']}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
+              width: '100%',
+              height: '31%',
+              position: 'absolute',
+              bottom: 0,
             }}>
             <View
               style={{
-                // width: '20%',
-                paddingVertical: 7,
-                paddingHorizontal: 10,
-                borderRadius: 9,
-                // height: 25,
-                backgroundColor: '#FFD645',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  ...styles.text,
-                  fontWeight: '400',
-                  fontSize: 12,
-                  color: '#000',
-                }}>
-                IMDB {selectData?.rating}
-              </Text>
-            </View>
-            <View>
-              <AntDesign size={15} name={'clockcircle'} color={'#454548bd'} />
-            </View>
-            <View>
-              <Text style={{...styles.text, fontWeight: '400', fontSize: 14}}>
-                2h 4m
-              </Text>
-            </View>
-            <View>
-              <Ionicons size={15} name={'calendar'} color={'#454548bd'} />
-            </View>
-            <View>
-              <Text style={{...styles.text, fontWeight: '400', fontSize: 14}}>
-                October 21,2022
-              </Text>
-            </View>
-          </View>
-
-          <View style={{position: 'relative'}}>
-            <TabView
-              style={{
-                position: 'absolute',
+                marginHorizontal: 20,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-evenly',
                 // borderWidth: 1,
                 // borderColor: '#FFF',
-                height: 200,
-                overflow: 'hidden',
-              }}
-              navigationState={{index, routes}}
-              renderScene={renderScene}
-              onIndexChange={handleIndexChange}
-              renderTabBar={renderTabBar}
-            />
-          </View>
-          <TouchableOpacity
-            style={{position: 'absolute', width: '100%', bottom: -260}}
-            onPress={() => navigation.navigate('Screen3')}>
-            <LinearGradient
-              colors={['#454548bd', '#454548bd', '#454548bd']}
-              style={{
-                width: '100%',
-                height: 70,
-                borderRadius: 15,
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 10,
+                flex: 1,
               }}>
-              <Text style={{...styles.text, fontWeight: '500', fontSize: 18}}>
-                Get Reservation
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
-    </ImageBackground>
+              {/* ----------Title ------------ */}
+              <View>
+                <Text style={{...styles.text, fontSize: 32, textAlign: 'left'}}>
+                  {routeData?.title}
+                </Text>
+              </View>
+              {/* ---------mid View------------ */}
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    // width: '20%',
+                    paddingVertical: 7,
+                    paddingHorizontal: 10,
+                    borderRadius: 9,
+                    // height: 25,
+                    backgroundColor: '#FFD645',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      ...styles.text,
+                      fontWeight: '400',
+                      fontSize: 12,
+                      color: '#000',
+                    }}>
+                    IMDB {routeData?.vote_average}
+                  </Text>
+                </View>
+                <View>
+                  <AntDesign size={15} name={'clockcircle'} color={'#FFF'} />
+                </View>
+                <View>
+                  <Text
+                    style={{...styles.text, fontWeight: '400', fontSize: 14}}>
+                    2h 4m
+                  </Text>
+                </View>
+                <View>
+                  <Ionicons size={15} name={'calendar'} color={'#FFF'} />
+                </View>
+                <View>
+                  <Text
+                    style={{...styles.text, fontWeight: '400', fontSize: 14}}>
+                    {routeData?.release_date}
+                  </Text>
+                </View>
+              </View>
+
+              {/*  ------bottom Button View------- */}
+
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  width: '100%',
+                  // borderWidth: 1,
+                  // borderColor: '#000',
+                  // position: 'absolute',
+                  // bottom: -100,
+                  // height: 70,
+                }}>
+                <TouchableOpacity
+                  style={{
+                    width: 'auto',
+                    // borderWidth: 1,
+                    // borderColor: '#FFF',
+                    height: 'auto',
+                    height: 70,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 15,
+                  }}
+                  onPress={() => navigation.navigate('Screen3',videoData)}>
+                  <LinearGradient
+                    colors={['#FFC907', '#FBB034', '#FFC907']}
+                    style={{
+                      height: 70,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 15,
+                      padding: 20,
+                    }}>
+                    <Text
+                      style={{
+                        ...styles.text,
+                        fontWeight: '500',
+                        fontSize: 18,
+                        color:'#000'
+                      }}>
+                      Get Reservation
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    width: 'auto',
+
+                    // borderWidth: 1,
+                    // borderColor: '#FFF',
+                    height: 'auto',
+                    height: 70,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 15,
+                  }}
+                  onPress={openRBsheet}>
+                  <LinearGradient
+                    colors={['#FBB034', '#FFC907', '#FBB034']}
+                    style={{
+                      height: 70,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 15,
+                      padding: 20,
+                      paddingHorizontal: 40,
+                    }}>
+                    <Text
+                      style={{
+                        ...styles.text,
+                        fontWeight: '500',
+                        fontSize: 18,
+                        color:'#000'
+                      }}>
+                      Description
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* -------RBSheet------------ */}
+
+            {/* /* <Button title="OPEN BOTTOM SHEET"/>  */}
+            <RBSheet
+              ref={refRBSheet}
+              closeOnDragDown={false}
+              closeOnPressMask={true}
+              customStyles={{
+                wrapper: {
+                  backgroundColor: '#0e0e0dde',
+                },
+                draggableIcon: {
+                  backgroundColor: '#FFF',
+                  width: 70,
+                },
+                container: {
+                  flex: 1,
+                  backgroundColor: '#454548bd',
+                  // alignItems: 'center',
+                  // height: '70%',
+                  // paddingHorizontal: '10%',
+                  marginTop: 10,
+                  // borderWidth:1,
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
+                  padding: 10,
+                },
+              }}>
+              <RBSheetData />
+            </RBSheet>
+          </LinearGradient>
+        </ImageBackground>
+      )}
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -427,22 +470,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFF',
     textAlign: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-
-    elevation: 24,
-    borderRadius: 40,
   },
   VText: {
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: '60%',
+    // height: '42%',
   },
   ImageV: {
     height: '100%',
@@ -473,9 +506,11 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    paddingTop: StatusBar.currentHeight,
+    marginTop: 5,
+    marginBottom: 10,
+    // paddingTop: StatusBar.currentHeight,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   btnV: {
     marginLeft: 'auto',
